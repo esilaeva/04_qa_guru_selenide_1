@@ -1,8 +1,8 @@
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.*;
 
 public class SoftAssertions {
 
@@ -20,7 +20,20 @@ public class SoftAssertions {
 
         //Open the SoftAssertions page, check that inside there is a sample code for JUnit5
         $("[href='/selenide/selenide/wiki/SoftAssertions']").click();
-        $("#user-content-3-using-junit5-extend-test-class").closest("h4")
-                .shouldHave(text("3. Using JUnit5 extend test class:"));
+        $(".markdown-body").$(byText("3. Using JUnit5 extend test class:")).sibling(0)
+                .shouldHave(text("""
+                     @ExtendWith({SoftAssertsExtension.class})
+                     class Tests {
+                          @Test
+                          void test() {
+                            Configuration.assertionMode = SOFT;
+                            open("page.html");
+                        
+                            $("#first").should(visible).click();
+                            $("#second").should(visible).click();
+                          }
+                    }
+                """));
+        sleep(5000);
     }
 }
